@@ -7,7 +7,7 @@ class GameButton extends React.Component{
         this.state={
             x:props.x,
             y:props.y,
-            pointValue:0,
+            pointValue:1,
         }
         this.HandleClick = this.HandleClick.bind(this)
     }
@@ -25,7 +25,8 @@ class GameButton extends React.Component{
 
     render(){
         return(
-            <button className="GameButton" onClick={this.HandleClick.bind(this.HandleClick)}>x:{this.state.x} y:{this.state.y}</button>
+            <button className="GameButton" onClick={this.HandleClick.bind(this.HandleClick)}>
+            points:{this.state.pointValue}</button>
         )
     }
 

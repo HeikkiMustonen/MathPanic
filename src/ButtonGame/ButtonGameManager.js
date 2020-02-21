@@ -23,11 +23,32 @@ class ButtonGameManager extends React.Component{
     }
 
     GameButtonPressed(button){
+        
         console.log("manager received a button click")
+        if(button === this.state.SelectedButton){
+            console.log("Was the same button")
+        }
+        else if (this.state.SelectedButton){
+            console.log("Was NOT the same button")
+            
+            //move point to selected button
+            var copyState = button.state
+            copyState.pointValue += this.state.SelectedButton.state.pointValue 
+            button.setState(copyState)
+            
+            //zero point from selected button
+            var zeropointsState = this.state.SelectedButton.state
+            zeropointsState.pointValue = 0
+            this.state.SelectedButton.setState(zeropointsState)
+
+            //make last button as new selected button
+            this.setState({SelectedButton:button})
+            console.log("button:",button)
+         
+        }
         this.setState({
             SelectedButton:button
         })
-
     }
 
     CreateTable(numberOfRows,numberOfButtons){
@@ -57,7 +78,6 @@ class ButtonGameManager extends React.Component{
             <div>
                 <br/>
                 <span> selected object : {this.state.SelectedButton ? this.state.SelectedButton.ButtonDataElement() : 'null'}</span>
-               
                 <hr></hr>
             </div>   
         )
