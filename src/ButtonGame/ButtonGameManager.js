@@ -1,29 +1,39 @@
 import React from 'react'
 import GameButton from './GameButton'
 
+
+
 class ButtonGameManager extends React.Component{
 
     constructor(props){
         super(props)
         
         this.state = {
-            SelectedButton:''
+            SelectedButton:'',
+            
         }
-
-        this.GameButtonPressed = this.GameButtonPressed.bind(this)
+        this.gameButtonPressed = this.gameButtonPressed.bind(this)
+        this.allButtons = []
     }
 
     componentDidMount(){
-        //this.Init()
+        this.givePointsToButtons()
     }
 
-    Init(){
-        var btnElements = document.getElementsByClassName("GameButton")
-
+    givePointsToButtons(){
+        this.allButtons.forEach(element => {
+            var copyState = element.state
+            copyState.pointValue = Math.floor(Math.random()* Math.floor(3))+1
+            element.setState(copyState)
+        });
     }
 
-    GameButtonPressed(button){
-        
+    addButtonToList(btn){
+        this.allButtons.push(btn)
+    }
+
+    gameButtonPressed(button){
+
         console.log("manager received a button click")
         if(button === this.state.SelectedButton){
             console.log("Was the same button")
@@ -43,7 +53,6 @@ class ButtonGameManager extends React.Component{
 
             //make last button as new selected button
             this.setState({SelectedButton:button})
-            console.log("button:",button)
          
         }
         this.setState({
@@ -51,20 +60,22 @@ class ButtonGameManager extends React.Component{
         })
     }
 
-    CreateTable(numberOfRows,numberOfButtons){
+    createTable(numberOfRows,numberOfButtons){
         
         let rows = []
         for(var i=0;i<numberOfRows;i++){
-            rows.push(this.CreteButtonRow(numberOfButtons,i))
+            rows.push(this.creteButtonRow(numberOfButtons,i))
         }
         return rows.map(x => x)
     }
 
-    CreteButtonRow(buttonCount,rowNumber){
+    creteButtonRow(buttonCount,rowNumber){
         
         let buttons =[]
         for(var i=0;i<buttonCount;i++){
-         buttons.push(<GameButton x={i} y={rowNumber} managerClick={this.GameButtonPressed}/>)
+        var akey = i.toString()+rowNumber.toString()
+        var newButton =  <GameButton key={akey} x={i} y={rowNumber} managerClick={this.gameButtonPressed} manager={this}/>
+        buttons.push(newButton)
         }
         
         return(<div>
@@ -73,7 +84,7 @@ class ButtonGameManager extends React.Component{
         )
     }
 
-    GameInfo(){
+    gameInfo(){
         return(
             <div>
                 <br/>
@@ -86,9 +97,9 @@ class ButtonGameManager extends React.Component{
     render(){
         return(
 
-            <div>
-                {this.GameInfo()}
-                {this.CreateTable(5,5)}
+            <div align="center">
+                {this.gameInfo()}
+                {this.createTable(5,5)}
             </div>
         );
     }
