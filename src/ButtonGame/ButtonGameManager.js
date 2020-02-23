@@ -9,7 +9,8 @@ class ButtonGameManager extends React.Component{
         super(props)
         
         this.state = {
-            SelectedButton:'',
+            SelectedButton:null,
+            points:0
             
         }
         this.gameButtonPressed = this.gameButtonPressed.bind(this)
@@ -32,18 +33,54 @@ class ButtonGameManager extends React.Component{
         this.allButtons.push(btn)
     }
 
+    IsButtonClose(button){
+        //On first click the SelectedButton in null, so return true always.
+        
+        if(this.state.SelectedButton === null) return true
+        var selectedX = this.state.SelectedButton.state.x
+        var selectedY = this.state.SelectedButton.state.y
+        if(this.InRange(button.state.x,selectedX-1,selectedX+1) && 
+            this.InRange(button.state.y, selectedY-1,selectedY+1) ){
+            return true
+        }else{
+            return false
+        }
+
+    }
+
+    InRange(value, min,max){
+            return ((value-min)*(value-max) <= 0)
+    }
+
     gameButtonPressed(button){
+        if(!this.IsButtonClose(button)) return
+
+        //Set selected button on first click
+        if(this.state.SelectedButton === null)(
+            this.setState({
+                SelectedButton:button
+            })
+        )
 
         console.log("manager received a button click")
         if(button === this.state.SelectedButton){
             console.log("Was the same button")
         }
-        else if (this.state.SelectedButton){
+
+
+        else if (this.state.SelectedButton && button.state.pointValue > 0){
+            
             console.log("Was NOT the same button")
             
             //move point to selected button
             var copyState = button.state
-            copyState.pointValue += this.state.SelectedButton.state.pointValue 
+            copyState.pointValue += this.state.SelectedButton.state.pointValue
+            
+            //check if pointValue is over x, give points
+            if(copyState.pointValue >= 5){
+                this.scoreUp()
+                copyState.pointValue = 0
+            }
             button.setState(copyState)
             
             //zero point from selected button
@@ -54,10 +91,16 @@ class ButtonGameManager extends React.Component{
             //make last button as new selected button
             this.setState({SelectedButton:button})
          
+            this.setState({
+                SelectedButton:button
+            })
         }
-        this.setState({
-            SelectedButton:button
-        })
+    }
+
+    scoreUp(){
+        var newState = this.state
+        newState.points = this.state.points+5
+        this.setState(newState)
     }
 
     createTable(numberOfRows,numberOfButtons){
@@ -89,6 +132,8 @@ class ButtonGameManager extends React.Component{
             <div>
                 <br/>
                 <span> selected object : {this.state.SelectedButton ? this.state.SelectedButton.ButtonDataElement() : 'null'}</span>
+                <br/>
+                Points : {this.state.points}
                 <hr></hr>
             </div>   
         )

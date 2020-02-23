@@ -19,7 +19,6 @@ class GameButton extends React.Component{
     }
 
     HandleClick(){
-        console.log("Gamebutton clicked")
         this.props.managerClick(this)
     }
 
