@@ -75,6 +75,9 @@ class ButtonGameManager extends React.Component{
             //move point to selected button
             var copyState = button.state
             copyState.pointValue += this.state.SelectedButton.state.pointValue
+
+            //set state isSelected. Used to 
+            copyState.isSelected = true
             
             //check if pointValue is over x, give points
             if(copyState.pointValue >= 5){
@@ -86,6 +89,8 @@ class ButtonGameManager extends React.Component{
             //zero point from selected button
             var zeropointsState = this.state.SelectedButton.state
             zeropointsState.pointValue = 0
+            zeropointsState.isSelected = false
+            zeropointsState.isUsed = true
             this.state.SelectedButton.setState(zeropointsState)
 
             //make last button as new selected button
