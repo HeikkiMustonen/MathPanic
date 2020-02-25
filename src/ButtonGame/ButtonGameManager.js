@@ -2,6 +2,7 @@ import React from 'react'
 import GameButton from './GameButton'
 import ButtonImage from './images/Button.png'
 import Timer from './Timer'
+import managerStyle from './ButtonGame.css'
 
 
 
@@ -120,8 +121,7 @@ class ButtonGameManager extends React.Component{
         }
         
         return ( <div>
-            <span>fref</span>
-            <table striped bordered hover style={{ border: "1px solid black"}}>
+            <table className="ButtonGameTable">
                 <tbody>
                     {rows.map(x => x)}
                 </tbody>
