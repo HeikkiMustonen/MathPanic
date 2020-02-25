@@ -1,5 +1,8 @@
 import React from 'react'
 import GameButton from './GameButton'
+import ButtonImage from './images/Button.png'
+import Timer from './Timer'
+
 
 
 
@@ -15,6 +18,7 @@ class ButtonGameManager extends React.Component{
         }
         this.gameButtonPressed = this.gameButtonPressed.bind(this)
         this.allButtons = []
+        this.timer =  React.createElement(Timer)
     }
 
     componentDidMount(){
@@ -114,7 +118,16 @@ class ButtonGameManager extends React.Component{
         for(var i=0;i<numberOfRows;i++){
             rows.push(this.creteButtonRow(numberOfButtons,i))
         }
-        return rows.map(x => x)
+        
+        return ( <div>
+            <span>fref</span>
+            <table striped bordered hover style={{ border: "1px solid black"}}>
+                <tbody>
+                    {rows.map(x => x)}
+                </tbody>
+                </table>
+            </div>
+            )
     }
 
     creteButtonRow(buttonCount,rowNumber){
@@ -126,22 +139,34 @@ class ButtonGameManager extends React.Component{
         buttons.push(newButton)
         }
         
-        return(<div>
-            {buttons.map( b => b)}
-            </div>
+        return(
+            <tr>
+                    {buttons.map( b => b)}
+            </tr>
         )
     }
 
     gameInfo(){
+
+        
+        
         return(
             <div>
                 <br/>
                 <span> selected object : {this.state.SelectedButton ? this.state.SelectedButton.ButtonDataElement() : 'null'}</span>
                 <br/>
                 Points : {this.state.points}
+                <br/>
+                {this.timer}
+                <br/>
+                <button onClick={this.testButton.bind(this.testButton)}>testbutton</button>
                 <hr></hr>
             </div>   
         )
+    }
+
+    testButton(){
+        console.log("testButton")
     }
     
     render(){

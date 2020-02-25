@@ -34,16 +34,20 @@ class GameButton extends React.Component{
     
     render() {
         return (
+            <td>
             <button className="GameButton" style={this.styles()} onClick={this.HandleClick.bind(this.HandleClick)}>
                 {this.showPointValue()}
-            </button>
-            //<image src={this.ButtonImage} decode={false} />
+            </button>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+            </td>
+            //<img src={ButtonImage} alt="jotain" height="50" width="50" onClick={this.HandleClick.bind(this.HandleClick)}/>                                                                                                                                                                                                                                                  
             //<a href="#" onClick={this.HandleClick} style={this.styles()}> </a> 
         )
     }
 
+    
+
     showPointValue() {
-        if (this.state.pointValue == 0)
+        if (this.state.pointValue === 0)
         {
             return 'x'
         } else
@@ -64,13 +68,16 @@ class GameButton extends React.Component{
 }
 
 const styleIsSelected = {
+    
     fontSize: "40px",
     color: "blue",
     backgroundColor: "lightblue"
 }
 const styleDefault = {
+    backgroundImage: `url(${ButtonImage})`,
+    backgroundsize:" 10px 10px",
     fontSize: "40px",
-    color: "white",
+    color: "blue",
     backgroundColor: "green"
 }
 const styleIsUsed = {
@@ -78,4 +85,8 @@ const styleIsUsed = {
     color: "red",
     backgroundColor: "pink"
 }
+
+
+
+
 export default GameButton
