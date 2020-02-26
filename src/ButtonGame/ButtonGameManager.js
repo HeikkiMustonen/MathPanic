@@ -18,6 +18,8 @@ class ButtonGameManager extends React.Component{
         }
 
         this.gameButtonPressed = this.gameButtonPressed.bind(this)
+        this.endGame = this.endGame.bind(this)
+
         this.testButton = this.testButton.bind(this)
         this.allButtons = []
         this.timer =  React.createElement(Timer,{timerSeconds:this.props.timerSeconds})
@@ -67,9 +69,11 @@ class ButtonGameManager extends React.Component{
             this.setState({
                 SelectedButton:button
             })
-            var copyState = button.state
-            copyState.isSelected = true
+            //var copyState = button.state
+            //copyState.isSelected = true
+            button.state.isSelected = true
             button.setState(copyState)
+            
             //Timer component is binded to window.
             //Call its functions thisway.
             window.timerComponent.startTimer()
@@ -176,6 +180,14 @@ class ButtonGameManager extends React.Component{
        console.log("testButton")
        window.timerComponent.startTimer()
     }
+
+    endGame(){
+        console.log("End Game")
+        var timeUsed = this.props.timerSeconds - window.timerComponent.state.seconds
+        console.log(timeUsed)
+
+     }
+     
     
     render(){
         return(
@@ -184,6 +196,9 @@ class ButtonGameManager extends React.Component{
                 {this.createTable(5,5)}
                 <br/>
                 <b>{this.timer} {this.points()}</b>
+                <br/>
+                <button onClick={this.endGame} className="DoneButton">Done !</button>
+                
             </div>
         );
     }
