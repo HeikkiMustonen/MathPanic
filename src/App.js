@@ -5,7 +5,7 @@ import React from 'react'
 
 function App() {
   return (
-   <ButtonGameManager rows="4" />
+   <ButtonGameManager rows="4" timerSeconds="20"/>
   );
 }
 

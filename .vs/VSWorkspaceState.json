@@ -1,6 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\src",
+    "\\src\\ButtonGame",
+    "\\src\\ButtonGame\\images"
   ],
+  "SelectedNode": "\\src\\ButtonGame\\images",
   "PreviewInSolutionExplorer": false
 }

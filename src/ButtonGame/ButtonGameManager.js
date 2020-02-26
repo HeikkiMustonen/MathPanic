@@ -1,6 +1,6 @@
 import React from 'react'
 import GameButton from './GameButton'
-import ButtonImage from './images/Button.png'
+import ButtonImage from './images/Button2.png'
 import Timer from './Timer'
 import managerStyle from './ButtonGame.css'
 
@@ -15,11 +15,13 @@ class ButtonGameManager extends React.Component{
         this.state = {
             SelectedButton:null,
             points:0
-            
         }
+
         this.gameButtonPressed = this.gameButtonPressed.bind(this)
+        this.testButton = this.testButton.bind(this)
         this.allButtons = []
-        this.timer =  React.createElement(Timer)
+        this.timer =  React.createElement(Timer,{timerSeconds:this.props.timerSeconds})
+        
     }
 
     componentDidMount(){
@@ -61,18 +63,24 @@ class ButtonGameManager extends React.Component{
         if(!this.IsButtonClose(button)) return
 
         //Set selected button on first click
-        if(this.state.SelectedButton === null)(
+        if(this.state.SelectedButton === null){
             this.setState({
                 SelectedButton:button
             })
-        )
-
-        console.log("manager received a button click")
-        if(button === this.state.SelectedButton){
-            console.log("Was the same button")
+            var copyState = button.state
+            copyState.isSelected = true
+            button.setState(copyState)
+            //Timer component is binded to window.
+            //Call its functions thisway.
+            window.timerComponent.startTimer()
         }
 
+        //if it is the same button, do nothing
+        if(button === this.state.SelectedButton){
+         
+        }
 
+        //If it is a new button, do stuff...
         else if (this.state.SelectedButton && button.state.pointValue > 0){
             
             console.log("Was NOT the same button")
@@ -147,34 +155,35 @@ class ButtonGameManager extends React.Component{
     }
 
     gameInfo(){
-
-        
-        
         return(
             <div>
                 <br/>
                 <span> selected object : {this.state.SelectedButton ? this.state.SelectedButton.ButtonDataElement() : 'null'}</span>
-                <br/>
-                Points : {this.state.points}
-                <br/>
-                {this.timer}
-                <br/>
-                <button onClick={this.testButton.bind(this.testButton)}>testbutton</button>
+               <br/>
+               <button onClick={this.testButton}>testbutton</button>
                 <hr></hr>
             </div>   
         )
     }
 
+    points(){
+        return(
+            <span> Points : {this.state.points}</span>
+        )
+    }
+
     testButton(){
-        console.log("testButton")
+       console.log("testButton")
+       window.timerComponent.startTimer()
     }
     
     render(){
         return(
-
             <div align="center">
                 {this.gameInfo()}
                 {this.createTable(5,5)}
+                <br/>
+                <b>{this.timer} {this.points()}</b>
             </div>
         );
     }

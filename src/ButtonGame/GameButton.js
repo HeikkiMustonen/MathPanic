@@ -1,5 +1,5 @@
 import React from 'react'
-import ButtonImage from './images/Button.png'
+import ButtonImage from './images/Button3.png'
 
 class GameButton extends React.Component{
 
@@ -69,21 +69,31 @@ class GameButton extends React.Component{
 
 const styleIsSelected = {
     
-    fontSize: "40px",
-    color: "blue",
+    backgroundImage: `url(${ButtonImage})`,
+    width:"40px",
+    height:"40px",
+    fontSize: "30px",
+    color: "white",
+    border: "none",
     backgroundColor: "lightblue"
 }
 const styleDefault = {
     backgroundImage: `url(${ButtonImage})`,
-    backgroundsize:" 10px 10px",
-    fontSize: "40px",
-    color: "blue",
-    backgroundColor: "green"
+    width:"40px",
+    height:"40px",
+    fontSize: "30px",
+    color: "white",
+    border: "none",
+    backgroundColor: "lightgreen"
 }
 const styleIsUsed = {
-    fontSize: "40px",
-    color: "red",
-    backgroundColor: "pink"
+    backgroundImage: `url(${ButtonImage})`,
+    width:"40px",
+    height:"40px",
+    fontSize: "30px",
+    color: "lightred",
+    border: "none",
+    backgroundColor: "red"
 }
 
 

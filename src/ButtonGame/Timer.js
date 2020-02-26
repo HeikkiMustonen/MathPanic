@@ -5,25 +5,41 @@ class Timer extends React.Component{
     constructor(props){
         super(props)
         this.state ={
-            seconds : 30
+            seconds : this.props.timerSeconds
+            
         }
-
+        window.timerComponent = this
+ 
         this.setSeconds = this.setSeconds.bind(this)
 
         var x = setInterval(this.setSeconds,1000)
-        
+        this.timeRuns = false
+     
     }
 
     setSeconds(){
+        if(!this.timeRuns) return
         var sec = this.state.seconds
         sec -= 1
         this.setState({seconds:sec})
     }
 
+    resetTimer(props){
+        this.setState({seconds:this.props.time})
+    }
+
+    test(){
+        console.log("timer test")
+    }
+
+    startTimer(time){
+        this.setState({seconds:this.props.timerSeconds})
+        this.timeRuns = true
+    }
+
     render(){
         return(
-
-            <h4>Timer {this.state.seconds}</h4>
+            <span>Timer {this.state.seconds}</span>
         )
 
     }

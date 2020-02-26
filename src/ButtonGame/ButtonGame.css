@@ -9,7 +9,20 @@
     color: white;
   }
 
-  .ButtonGameTable,td{
+  .ButtonGameTable{
       border: 1px solid black;
+    padding: 5px;
+    min-width: auto;
+    background:url('./images/TableBackground.png');
+    background-color: lightyellow;
+    background-size: cover;
   }
+
+  td {
+    border: 2px solid lightgray ;
+    min-width: auto;
+    min-height:auto;
+  }
+
+
   
