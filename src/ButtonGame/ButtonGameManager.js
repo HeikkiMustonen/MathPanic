@@ -258,7 +258,7 @@ class ButtonGameManager extends React.Component{
     render(){
         return(
             <div style={{width:'100%', overflow:'hidden'}}>
-                <div style={{width:'auto', float:'left', padding:'10px'}}>
+                <div className="howTo-div">
                         <h2>How to Play</h2>
                         <ul>
                             <li>Click square to start the game.</li>
@@ -270,27 +270,32 @@ class ButtonGameManager extends React.Component{
                             {this.showZeroPoints()}
                         </ul>
                 </div>
-                <div style={{width:'auto',padding:'10px', float:'left',borderStyle:'solid'}}>
+                <div className="gameBoard-div">
                     <div align="center">
-                    <h1>Can you count to five?</h1>
+                    <h1>-= MathPanic =-</h1>
                     <h2>Time left : {this.timer}</h2>
+                    <h2>{this.points()}</h2>
                     </div>
+                    <div align="center">
                     {this.createTable(this.tableX,this.tableY)}
+                    </div>
                     <div align="center">
                         <br></br>
                          <button onClick={this.endGame} className="DoneButton">Done !</button>
                          
                     </div>
                 </div>
-                <div style={{width:'20%', float:'left', padding:'10px'}}>
+                <div className="scoreBoard-div">
                 
                 <br/>
                     <br/>
                     <button onClick={this.resetGame} className="DoneButton">Restart</button>
                     <br/>
-                    <hr></hr>
-                    <h4>{this.points()}</h4>
-                    <hr></hr>
+                        <div className="latestScores">
+                        <hr className="latestScore-hr"></hr>
+                        <h2 >Latest Scores</h2>
+                        <hr className="latestScore-hr"></hr>
+                        </div>
                     <h4>{this.scores.map(x => x)}</h4>
                 </div>
             </div>
