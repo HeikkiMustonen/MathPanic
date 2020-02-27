@@ -6,7 +6,7 @@ import React from 'react'
 function App() {
   return (
     <div>
-      <ButtonGameManager rows="4" tableX="8" tableY="8" timerSeconds="30"/>
+      <ButtonGameManager tableX="8" tableY="8" timerSeconds="40" timeScoreZero={false}/>
     </div>
   );
 }

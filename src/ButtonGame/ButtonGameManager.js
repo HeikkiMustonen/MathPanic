@@ -4,8 +4,6 @@ import Timer from './Timer'
 import managerStyle from './ButtonGame.css'
 
 
-
-
 class ButtonGameManager extends React.Component{
 
     constructor(props){
@@ -14,8 +12,11 @@ class ButtonGameManager extends React.Component{
         this.state = {
             SelectedButton:null,
             points:0,
-            showTotalPoints:false
+            showTotalPoints:false,
+            timeScoreZero: this.props.timeScoreZero 
         }
+
+        //if timeScoreZero is 'true', points will reset when time reaches zero.
 
         //table minium size is 5 x 5
         if(this.props.tableX < 5){
@@ -32,34 +33,70 @@ class ButtonGameManager extends React.Component{
             this.tableY = this.props.tableX
         }
 
+        //button bindings
         this.gameButtonPressed = this.gameButtonPressed.bind(this)
         this.endGame = this.endGame.bind(this)
-        this.testButton = this.testButton.bind(this)
+        this.resetGame = this.resetGame.bind(this)
+        
+        //all buttons are in this array.
         this.allButtons = []
+        
+        //this array holds the scores achieved
+        this.scores = [] 
+
+        //create timer element
         this.timer =  React.createElement(Timer,{timerSeconds:this.props.timerSeconds,manager:this})
     }
 
+    resetGame(){
+
+        console.log("Reset Game!")
+        window.timerComponent.stopTimer()
+        window.timerComponent.resetTimer()
+        this.setState(
+           {
+            SelectedButton:null,
+            points:0,
+            showTotalPoints:false,
+            timeScoreZero: this.props.timeScoreZero 
+           }    
+        )
+        this.resetAllButtons()
+    }
 
     componentDidMount(){
         this.givePointsToButtons()
     }
 
+    //give points to each button
     givePointsToButtons(){
         this.allButtons.forEach(element => {
             var copyState = element.state
-            copyState.pointValue = Math.floor(Math.random()* Math.floor(3))+1
+            copyState.pointValue = Math.floor(Math.random()* Math.floor(4))+1
             element.setState(copyState)
         });
     }
 
+    resetAllButtons(){
+        this.allButtons.forEach(element => {
+            var copyState = element.state
+            copyState.isUsed = false
+            copyState.isSelected = false
+            copyState.pointValue = Math.floor(Math.random()* Math.floor(4))+1
+            element.setState(copyState)
+        });
+    }
+
+    //buttons call this to add button to  the list
     addButtonToList(btn){
         this.allButtons.push(btn)
     }
 
+    //check if the button clicked is near the last button clicked
     IsButtonClose(button){
         //On first click the SelectedButton in null, so return true always.
-        
         if(this.state.SelectedButton === null) return true
+    
         var selectedX = this.state.SelectedButton.state.x
         var selectedY = this.state.SelectedButton.state.y
         if(this.InRange(button.state.x,selectedX-1,selectedX+1) && 
@@ -75,7 +112,7 @@ class ButtonGameManager extends React.Component{
             return ((value-min)*(value-max) <= 0)
     }
 
-    //Handle number clicks
+    //Handle button clicks
     gameButtonPressed(button){
         if(!this.IsButtonClose(button)) return
 
@@ -102,8 +139,6 @@ class ButtonGameManager extends React.Component{
         //If it is a new button, do stuff...
         else if (this.state.SelectedButton && button.state.pointValue > 0){
             
-            console.log("Was NOT the same button")
-            
             //move point to selected button
             var copyState = button.state
             copyState.pointValue += this.state.SelectedButton.state.pointValue
@@ -111,7 +146,7 @@ class ButtonGameManager extends React.Component{
             //set state isSelected. Used to 
             copyState.isSelected = true
             
-            //check if pointValue is over x, give points
+            //check if pointValue is over x -> give points
             if(copyState.pointValue >= 5){
                 this.scoreUp()
                 copyState.pointValue = 0
@@ -127,7 +162,6 @@ class ButtonGameManager extends React.Component{
 
             //make last button as new selected button
             this.setState({SelectedButton:button})
-
         }
     }
 
@@ -175,31 +209,25 @@ class ButtonGameManager extends React.Component{
         )
     }
 
-    testButton(){
-       console.log("testButton")
-       window.timerComponent.startTimer()
-    }
-
     endGame(){
-        console.log("End Game")
         window.timerComponent.stopTimer()
         var copyState = this.state
         copyState.showTotalPoints=true
         this.setState(copyState)
+        this.scores.unshift(this.totalPointsDiv())
     }
      
      //return totalpoint div
      totalPointsDiv(){
         var endpoints = this.calculateTotalPoints()
-
         return(
             <div>
-                    <span>Total points!</span>
-                    <br/>
+            <div className="endScore" > 
                     <span>points {endpoints.points} - {endpoints.timeUsed} time used</span>
                     <br/>
                     <span><b>Total points : {endpoints.total}</b></span>
-
+            </div>
+            <br/>
             </div>
          )
      }
@@ -208,8 +236,24 @@ class ButtonGameManager extends React.Component{
         var timeUsed = this.props.timerSeconds - window.timerComponent.state.seconds
         var points = this.state.points
         var total = points - timeUsed
-        return {timeUsed:timeUsed, points:points,total:total}
+
+        if(this.state.timeScoreZero && timeUsed == this.props.timerSeconds){
+             return {timeUsed:timeUsed, points:0,total:0}
+        }
+        else{
+            return {timeUsed:timeUsed, points:points,total:total}
+        }
      }
+
+     restartGame(){
+        window.location.reload();
+     }
+
+    showZeroPoints(){
+        if(this.state.timeScoreZero){
+        return (<li>If time reaches zero, you get no points.</li>)
+        }
+    }
     
     render(){
         return(
@@ -223,6 +267,7 @@ class ButtonGameManager extends React.Component{
                             <li>Every points over five is lost.</li>
                             <li>Click 'DONE!' to end the round.</li>
                             <li>Time used is substracted from your total points.</li>
+                            {this.showZeroPoints()}
                         </ul>
                 </div>
                 <div style={{width:'auto',padding:'10px', float:'left',borderStyle:'solid'}}>
@@ -234,14 +279,19 @@ class ButtonGameManager extends React.Component{
                     <div align="center">
                         <br></br>
                          <button onClick={this.endGame} className="DoneButton">Done !</button>
+                         
                     </div>
                 </div>
                 <div style={{width:'20%', float:'left', padding:'10px'}}>
                 
                 <br/>
-                    <b>{this.points()}</b>
                     <br/>
-                    {this.state.showTotalPoints ? this.totalPointsDiv() : null}
+                    <button onClick={this.resetGame} className="DoneButton">Restart</button>
+                    <br/>
+                    <hr></hr>
+                    <h4>{this.points()}</h4>
+                    <hr></hr>
+                    <h4>{this.scores.map(x => x)}</h4>
                 </div>
             </div>
         );

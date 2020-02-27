@@ -28,5 +28,18 @@
     font-size: 25px;
   }
 
+  .endScore{
+    background-color:lightcyan;
+    background-repeat: false;
+    background-size: cover;
+    background-image:url('./images/TableBackground.png');
+    padding: 10px;
+  }
+
+  .gameBoard{
+    background-color:lightcyan;
+    border: 1px blue;
+  }
+
 
   
