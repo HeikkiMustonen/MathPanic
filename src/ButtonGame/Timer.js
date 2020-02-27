@@ -9,39 +9,44 @@ class Timer extends React.Component{
             
         }
         window.timerComponent = this
- 
-        this.setSeconds = this.setSeconds.bind(this)
+        this.gameManager = this.props.manager
+        this.turnClock = this.turnClock.bind(this)
 
-        var x = setInterval(this.setSeconds,1000)
+        var x = setInterval(this.turnClock,1000)
         this.timeRuns = false
      
     }
 
-    setSeconds(){
+    turnClock(){
         if(!this.timeRuns) return
         var sec = this.state.seconds
         sec -= 1
         this.setState({seconds:sec})
+
+        //if time is up...
+        if(this.state.seconds <= 0){
+            this.timeRuns = false
+            this.gameManager.endGame()
+        }
     }
 
     resetTimer(props){
         this.setState({seconds:this.props.time})
     }
 
-    test(){
-        console.log("timer test")
-    }
-
-    startTimer(time){
+    startTimer(){
         this.setState({seconds:this.props.timerSeconds})
         this.timeRuns = true
     }
 
+    stopTimer(){
+        this.timeRuns = false
+    }
+
     render(){
         return(
-            <span>Timer {this.state.seconds}</span>
+           <span>{this.state.seconds}</span> 
         )
-
     }
 }
 

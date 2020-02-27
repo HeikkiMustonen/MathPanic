@@ -1,6 +1,5 @@
 import React from 'react'
 import GameButton from './GameButton'
-import ButtonImage from './images/Button2.png'
 import Timer from './Timer'
 import managerStyle from './ButtonGame.css'
 
@@ -14,17 +13,32 @@ class ButtonGameManager extends React.Component{
         
         this.state = {
             SelectedButton:null,
-            points:0
+            points:0,
+            showTotalPoints:false
+        }
+
+        //table minium size is 5 x 5
+        if(this.props.tableX < 5){
+            this.tableX = 5
+        }
+        else {
+            this.tableX = this.props.tableX
+        }
+
+        if(this.props.tableY < 5){
+            this.tableY = 5
+        }
+        else {
+            this.tableY = this.props.tableX
         }
 
         this.gameButtonPressed = this.gameButtonPressed.bind(this)
         this.endGame = this.endGame.bind(this)
-
         this.testButton = this.testButton.bind(this)
         this.allButtons = []
-        this.timer =  React.createElement(Timer,{timerSeconds:this.props.timerSeconds})
-        
+        this.timer =  React.createElement(Timer,{timerSeconds:this.props.timerSeconds,manager:this})
     }
+
 
     componentDidMount(){
         this.givePointsToButtons()
@@ -54,13 +68,14 @@ class ButtonGameManager extends React.Component{
         }else{
             return false
         }
-
     }
 
+    //return true if value is between min and max
     InRange(value, min,max){
             return ((value-min)*(value-max) <= 0)
     }
 
+    //Handle number clicks
     gameButtonPressed(button){
         if(!this.IsButtonClose(button)) return
 
@@ -103,7 +118,7 @@ class ButtonGameManager extends React.Component{
             }
             button.setState(copyState)
             
-            //zero point from selected button
+            //zero points from selected button
             var zeropointsState = this.state.SelectedButton.state
             zeropointsState.pointValue = 0
             zeropointsState.isSelected = false
@@ -112,10 +127,7 @@ class ButtonGameManager extends React.Component{
 
             //make last button as new selected button
             this.setState({SelectedButton:button})
-         
-            this.setState({
-                SelectedButton:button
-            })
+
         }
     }
 
@@ -143,8 +155,7 @@ class ButtonGameManager extends React.Component{
     }
 
     creteButtonRow(buttonCount,rowNumber){
-        
-        let buttons =[]
+        var buttons =[]
         for(var i=0;i<buttonCount;i++){
         var akey = i.toString()+rowNumber.toString()
         var newButton =  <GameButton key={akey} x={i} y={rowNumber} managerClick={this.gameButtonPressed} manager={this}/>
@@ -155,18 +166,6 @@ class ButtonGameManager extends React.Component{
             <tr>
                     {buttons.map( b => b)}
             </tr>
-        )
-    }
-
-    gameInfo(){
-        return(
-            <div>
-                <br/>
-                <span> selected object : {this.state.SelectedButton ? this.state.SelectedButton.ButtonDataElement() : 'null'}</span>
-               <br/>
-               <button onClick={this.testButton}>testbutton</button>
-                <hr></hr>
-            </div>   
         )
     }
 
@@ -183,22 +182,67 @@ class ButtonGameManager extends React.Component{
 
     endGame(){
         console.log("End Game")
-        var timeUsed = this.props.timerSeconds - window.timerComponent.state.seconds
-        console.log(timeUsed)
-
-     }
+        window.timerComponent.stopTimer()
+        var copyState = this.state
+        copyState.showTotalPoints=true
+        this.setState(copyState)
+    }
      
+     //return totalpoint div
+     totalPointsDiv(){
+        var endpoints = this.calculateTotalPoints()
+
+        return(
+            <div>
+                    <span>Total points!</span>
+                    <br/>
+                    <span>points {endpoints.points} - {endpoints.timeUsed} time used</span>
+                    <br/>
+                    <span><b>Total points : {endpoints.total}</b></span>
+
+            </div>
+         )
+     }
+
+     calculateTotalPoints(){
+        var timeUsed = this.props.timerSeconds - window.timerComponent.state.seconds
+        var points = this.state.points
+        var total = points - timeUsed
+        return {timeUsed:timeUsed, points:points,total:total}
+     }
     
     render(){
         return(
-            <div align="center">
-                {this.gameInfo()}
-                {this.createTable(5,5)}
-                <br/>
-                <b>{this.timer} {this.points()}</b>
-                <br/>
-                <button onClick={this.endGame} className="DoneButton">Done !</button>
+            <div style={{width:'100%', overflow:'hidden'}}>
+                <div style={{width:'auto', float:'left', padding:'10px'}}>
+                        <h2>How to Play</h2>
+                        <ul>
+                            <li>Click square to start the game.</li>
+                            <li>Click adjacent square to move points to it.</li>
+                            <li>If the sum of the squares is 5, you gain 5 points.</li>
+                            <li>Every points over five is lost.</li>
+                            <li>Click 'DONE!' to end the round.</li>
+                            <li>Time used is substracted from your total points.</li>
+                        </ul>
+                </div>
+                <div style={{width:'auto',padding:'10px', float:'left',borderStyle:'solid'}}>
+                    <div align="center">
+                    <h1>Can you count to five?</h1>
+                    <h2>Time left : {this.timer}</h2>
+                    </div>
+                    {this.createTable(this.tableX,this.tableY)}
+                    <div align="center">
+                        <br></br>
+                         <button onClick={this.endGame} className="DoneButton">Done !</button>
+                    </div>
+                </div>
+                <div style={{width:'20%', float:'left', padding:'10px'}}>
                 
+                <br/>
+                    <b>{this.points()}</b>
+                    <br/>
+                    {this.state.showTotalPoints ? this.totalPointsDiv() : null}
+                </div>
             </div>
         );
     }

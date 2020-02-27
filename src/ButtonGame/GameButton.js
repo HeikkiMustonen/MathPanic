@@ -39,8 +39,6 @@ class GameButton extends React.Component{
                 {this.showPointValue()}
             </button>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
             </td>
-            //<img src={ButtonImage} alt="jotain" height="50" width="50" onClick={this.HandleClick.bind(this.HandleClick)}/>                                                                                                                                                                                                                                                  
-            //<a href="#" onClick={this.HandleClick} style={this.styles()}> </a> 
         )
     }
 
@@ -95,8 +93,5 @@ const styleIsUsed = {
     border: "none",
     backgroundColor: "red"
 }
-
-
-
 
 export default GameButton
